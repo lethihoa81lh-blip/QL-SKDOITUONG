@@ -2,71 +2,250 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quản lý Sức Khỏe Đối Tượng Trung tâm Bảo trợ Xã hội Tân Hiệp</title>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
-body {
-    font-family: "Times New Roman", Times, serif;
-    padding: 20px;
+:root{
+    --nen:#eef3f1;
+    --the:#ffffff;
+    --chu:#1f2d2a;
+    --phu:#5b6b67;
+    --xanh:#0f6b5c;
+    --xanh-dam:#0a4f44;
+    --xanh-nhat:#e1f1ed;
+    --vien:#d3dedb;
+    --cam:#c9772b;
+    --do:#b83a3a;
+    --nu-bg:#fde6ee;  --nu-ch:#a3235a;
+    --nam-bg:#e0ecfb; --nam-ch:#1d5a9e;
 }
 
-input, button {
-    padding: 6px;
-    margin: 5px;
+*{ box-sizing:border-box; }
+
+body {
+    font-family: "Times New Roman", Times, serif;
+    background: var(--nen);
+    color: var(--chu);
+    margin:0;
+    padding: 0 20px 30px;
+}
+
+/* ===== TIÊU ĐỀ ===== */
+.banner{
+    margin:0 -20px 12px;
+    padding:12px 24px;
+    background: linear-gradient(90deg, var(--xanh-dam), var(--xanh));
+    color:#fff;
+}
+.banner h2{ margin:0; font-size:21px; letter-spacing:.2px; }
+.banner p{ margin:2px 0 0; font-size:13px; opacity:.85; }
+
+/* ===== KHUNG THÊM / SỬA ===== */
+.the{
+    background: var(--the);
+    border:1px solid var(--vien);
+    border-radius:12px;
+    padding:12px 16px;
+    margin-bottom:10px;
+    box-shadow:0 2px 8px rgba(15,60,50,.07);
+}
+.the-dau{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding-bottom:8px;
+    margin-bottom:10px;
+    border-bottom:2px solid var(--xanh-nhat);
+}
+.the-dau h3{ margin:0; font-size:16px; color:var(--xanh-dam); }
+.admin-box{ display:flex; align-items:center; gap:6px; }
+.admin-box input{ width:160px; }
+
+.luoi{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:8px 12px;
+}
+.s2{ grid-column: span 2; }
+.o label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    color:var(--phu);
+    margin-bottom:2px;
+}
+
+input, select, button {
+    font-family: inherit;
+    font-size:14px;
+}
+
+.o input, .o select, .admin-box input{
+    width:100%;
+    height:34px;
+    padding:4px 9px;
+    border:1px solid var(--vien);
+    border-radius:8px;
+    background:#fbfdfc;
+    transition:border-color .15s, box-shadow .15s;
+}
+.o input:focus, .o select:focus, .admin-box input:focus{
+    outline:none;
+    border-color: var(--xanh);
+    box-shadow:0 0 0 3px rgba(15,107,92,.18);
+    background:#fff;
+}
+
+.hang-nut{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+}
+
+/* ===== NÚT ===== */
+button{
+    padding:8px 14px;
+    border:1px solid transparent;
+    border-radius:8px;
+    cursor:pointer;
+    background:#fff;
+    color:var(--chu);
+    border-color:var(--vien);
+    transition:background .15s, border-color .15s, transform .05s;
+}
+button:hover:not(:disabled){ background:var(--xanh-nhat); border-color:var(--xanh); }
+button:active:not(:disabled){ transform:translateY(1px); }
+button:focus-visible, select:focus-visible, input:focus-visible{ outline:2px solid var(--xanh); outline-offset:1px; }
+button:disabled{ opacity:.45; cursor:not-allowed; }
+
+.nut-chinh{ background:var(--xanh); color:#fff; border-color:var(--xanh); font-weight:bold; }
+.nut-chinh:hover:not(:disabled){ background:var(--xanh-dam); border-color:var(--xanh-dam); }
+.nut-sua{ background:var(--cam); color:#fff; border-color:var(--cam); font-weight:bold; }
+.nut-sua:hover:not(:disabled){ background:#a85f1c; border-color:#a85f1c; }
+
+/* ===== THANH CÔNG CỤ ===== */
+.thanh{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px 18px;
+}
+.nhom{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.nhom-ten{ font-size:13px; font-weight:bold; color:var(--phu); margin-right:2px; }
+
+.nhap-excel{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 10px;
+    border:1px dashed var(--xanh);
+    border-radius:8px;
+    background:var(--xanh-nhat);
+    font-size:13px;
+}
+.nhap-excel input{ margin:0; padding:0; font-size:13px; }
+
+/* ===== SỐ LIỆU ===== */
+.tong{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:14px 0 10px;
+}
+.chip{
+    padding:8px 16px;
+    border-radius:10px;
+    background:var(--the);
+    border:1px solid var(--vien);
+    font-size:15px;
+}
+.chip b{ font-size:20px; margin-left:6px; color:var(--xanh-dam); }
+.chip.ok b{ color:var(--xanh); }
+.chip.no b{ color:var(--do); }
+
+/* ===== BẢNG ===== */
+.container {
+    max-height:70vh;
+    overflow:auto;
+    background:var(--the);
+    border:1px solid var(--vien);
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(15,60,50,.07);
 }
 
 table {
-    width: 100%;
+    width:100%;
+    min-width:1050px;
     border-collapse: collapse;
     table-layout: fixed;
 }
 
 th, td {
-    border: 1px solid #ccc;
-    padding: 2px 3px;
-    font-size: 13px;
-    text-align: center;
-    white-space: nowrap;
+    border:1px solid #dfe8e5;
+    padding:3px 5px;
+    font-size:13px;
+    text-align:center;
+    white-space:nowrap;
 }
 
 th {
-    background:#f2f2f2;
+    background:var(--xanh-nhat);
+    color:var(--xanh-dam);
+    position:sticky;
+    top:0;
+    z-index:1;
 }
+tbody tr:nth-child(even){ background:#f8fbfa; }
+tbody tr:hover{ background:#eef6ff; }
 
-.container {
-    max-height:70vh;
-    overflow:auto;
-}
+th:nth-child(1), td:nth-child(1){ width:36px; }
+th:nth-child(2), td:nth-child(2){ width:150px; text-align:left; }
+th:nth-child(3), td:nth-child(3){ width:70px; }
+th:nth-child(4), td:nth-child(4){ width:82px; }
+th:nth-child(5), td:nth-child(5){ width:95px; }
+th:nth-child(6), td:nth-child(6){ width:55px; }
+th:nth-child(7), td:nth-child(7){ text-align:left; white-space:normal; }
+th:nth-child(8), td:nth-child(8){ text-align:left; white-space:normal; }
+th:nth-child(9), td:nth-child(9){ width:115px; }
+th:nth-child(10), td:nth-child(10){ width:100px; }
 
-th:nth-child(1), td:nth-child(1){ width:25px; }
-th:nth-child(2), td:nth-child(2){ width:90px; text-align:left; }
-th:nth-child(3), td:nth-child(3){ width:40px; }
-th:nth-child(4), td:nth-child(4){ width:50px; }
-th:nth-child(5), td:nth-child(5){ width:30px; }
-th:nth-child(6), td:nth-child(6){ width:75px; }
-th:nth-child(7), td:nth-child(7){ width:80px; }
-th:nth-child(8), td:nth-child(8){ width:70px; }
-th:nth-child(9), td:nth-child(9){ width:35px; }
-
-th input{
+th input, th select{
     width:95%;
-    padding:1px;
-    margin:1px;
-    font-size:10px;
+    padding:2px;
+    margin:2px 0 0;
+    font-size:11px;
+    border:1px solid var(--vien);
+    border-radius:4px;
 }
 
 td button{
-    padding:1px 3px;
+    padding:2px 7px;
     margin:1px;
-    font-size:10px;
+    font-size:11px;
+    border-radius:5px;
 }
+td button.xoa:hover{ background:#fbe3e3; border-color:var(--do); color:var(--do); }
 
-/* Thống kê chẩn đoán */
+.gt{
+    display:inline-block;
+    padding:1px 9px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+.gt.nu{ background:var(--nu-bg); color:var(--nu-ch); }
+.gt.nam{ background:var(--nam-bg); color:var(--nam-ch); }
+
+/* ===== THỐNG KÊ CHẨN ĐOÁN ===== */
 .cd-box{
     padding:8px;
-    border:1px solid #ddd;
+    border:1px solid var(--vien);
     border-radius:8px;
     text-align:center;
     cursor:pointer;
@@ -74,63 +253,75 @@ td button{
 }
 .cd-box:hover{ background:#eef6ff; }
 
-.nhap-excel{
-    display:inline-block;
-    margin:5px;
-    padding:4px 8px;
-    border:1px dashed #999;
-    border-radius:6px;
-    font-size:13px;
-}
-.nhap-excel input{
-    margin:0;
-    padding:0;
-}
+@media (max-width:900px){ .luoi{ grid-template-columns:repeat(3,1fr); } }
+@media (max-width:600px){ .luoi{ grid-template-columns:repeat(2,1fr); } }
 </style>
 </head>
 
 <body>
 
-<h2>Quản lý sức khỏe đối tượng Trung tâm Bảo trợ Xã hội Tân Hiệp</h2>
+<div class="banner">
+    <h2>Quản lý sức khỏe đối tượng Trung tâm Bảo trợ Xã hội Tân Hiệp</h2>
+    <p>Danh sách, chẩn đoán, thuốc và thẻ BHYT của đối tượng</p>
+</div>
 
-<input type="password" id="adminPass" placeholder="Mật khẩu admin">
-<button onclick="loginAdmin()">Đăng nhập admin</button>
+<div class="the">
+    <div class="the-dau">
+        <h3>Thêm / cập nhật đối tượng</h3>
+        <div class="admin-box">
+            <input type="password" id="adminPass" placeholder="Mật khẩu admin">
+            <button onclick="loginAdmin()">Đăng nhập admin</button>
+        </div>
+    </div>
 
-<br>
+    <div class="luoi">
+        <div class="o s2"><label for="ten">Họ tên</label><input id="ten" placeholder="Nguyễn Văn A"></div>
+        <div class="o"><label for="namsinh">Năm sinh</label><input id="namsinh" placeholder="1960"></div>
+        <div class="o"><label for="nha">Nhà</label><input id="nha" placeholder="1"></div>
+        <div class="o"><label for="gioitinh">Giới tính</label><select id="gioitinh"><option value="">-- Chọn --</option><option value="Nam">Nam</option><option value="Nữ">Nữ</option></select></div>
+        <div class="o"><label for="ngaynhap">Ngày nhập TT</label><input id="ngaynhap" type="date"></div>
+        <div class="o s2"><label for="chandoan">Chẩn đoán</label><input id="chandoan" placeholder="Nhiều bệnh: HA, Tâm thần"></div>
+        <div class="o s2"><label for="thuoc">Thuốc</label><input id="thuoc" placeholder="Tên thuốc"></div>
+        <div class="o s2"><label for="bhyt">Số thẻ BHYT</label><input id="bhyt" placeholder="DN4..."></div>
+    </div>
 
-<input id="ten" placeholder="Họ tên">
-<input id="namsinh" placeholder="Năm sinh">
-<input id="ngaynhap" type="date">
-<input id="nha" placeholder="Nhà">
-<input id="chandoan" placeholder="Chẩn đoán (nhiều bệnh: HA, Tâm thần)">
-<input id="thuoc" placeholder="Thuốc">
-<input id="bhyt" placeholder="Số thẻ BHYT">
+    <div class="hang-nut">
+        <button id="btnAdd" class="nut-chinh" onclick="them()" disabled>＋ Thêm</button>
+        <button id="btnEdit" class="nut-sua" onclick="capNhat()" disabled>✎ Cập nhật</button>
+    </div>
+</div>
 
-<br>
+<div class="the">
+    <div class="thanh">
+        <div class="nhom">
+            <span class="nhom-ten">Lọc BHYT:</span>
+            <button onclick="locBHYT()">Chỉ có BHYT</button>
+            <button onclick="locChuaBHYT()">Chưa có BHYT</button>
+            <button onclick="hienTatCa()">Hiện tất cả</button>
+        </div>
 
-<button id="btnAdd" onclick="them()" disabled>Thêm</button>
-<button id="btnEdit" onclick="capNhat()" disabled>Cập nhật</button>
-<button onclick="xuatExcel()">Xuất Excel</button>
+        <div class="nhom">
+            <span class="nhom-ten">Xuất file:</span>
+            <button onclick="xuatExcel()">Xuất Excel</button>
+            <button onclick="xuatExcelBHYT()">Xuất Excel BHYT</button>
+        </div>
 
-<button onclick="locBHYT()">Chỉ có BHYT</button>
-<button onclick="locChuaBHYT()">Chưa có BHYT</button>
-<button onclick="hienTatCa()">Hiện tất cả</button>
-<button onclick="xuatExcelBHYT()">Xuất Excel BHYT</button>
+        <div class="nhom">
+            <!-- NHẬP EXCEL -->
+            <span class="nhap-excel">
+                📥 Nhập từ Excel (admin):
+                <input type="file" id="fileExcel" accept=".xlsx,.xls,.csv" onchange="nhapExcel(event)">
+            </span>
+            <button onclick="taiFileMau()">⬇ Tải file Excel mẫu</button>
+        </div>
+    </div>
+</div>
 
-<br>
-
-<!-- NHẬP EXCEL -->
-<span class="nhap-excel">
-    📥 Nhập từ Excel (admin):
-    <input type="file" id="fileExcel" accept=".xlsx,.xls,.csv" onchange="nhapExcel(event)">
-</span>
-<button onclick="taiFileMau()">⬇ Tải file Excel mẫu</button>
-
-<h3>
-Tổng: <span id="tongBN">0</span> | 
-Có BHYT: <span id="coBHYT">0</span> | 
-Chưa có BHYT: <span id="chuaBHYT">0</span>
-</h3>
+<div class="tong">
+    <div class="chip">Tổng <b id="tongBN">0</b></div>
+    <div class="chip ok">Có BHYT <b id="coBHYT">0</b></div>
+    <div class="chip no">Chưa có BHYT <b id="chuaBHYT">0</b></div>
+</div>
 
 <button onclick="moThongKe()">
 📊 Xem thống kê chẩn đoán
@@ -138,11 +329,11 @@ Chưa có BHYT: <span id="chuaBHYT">0</span>
 
 <div id="tongCD" style="
 display:none;
-margin-top:10px;
+margin:10px 0;
 padding:10px;
-border:1px solid #ddd;
+border:1px solid #d3dedb;
 border-radius:8px;
-background:#fafafa;
+background:#fff;
 ">
 </div>
 
@@ -153,10 +344,17 @@ background:#fafafa;
     <th>STT</th>
 <th>Họ tên<br><input id="f_ten" onkeyup="locCot()"></th>
 <th>Năm sinh<br><input id="f_namsinh" onkeyup="locCot()"></th>
+<th>Giới tính<br>
+    <select id="f_gt" onchange="locCot()">
+        <option value="">Tất cả</option>
+        <option value="Nam">Nam</option>
+        <option value="Nữ">Nữ</option>
+    </select>
+</th>
     <th>Ngày nhập TT<br><input id="f_ngaynhap" onkeyup="locCot()"></th>
-<th onclick="sapXepNha()">
+<th onclick="sapXepNha()" style="cursor:pointer">
 Nhà ⬍<br>
-<input id="f_nha" onkeyup="locCot()">
+<input id="f_nha" onkeyup="locCot()" onclick="event.stopPropagation()">
 </th>
 <th>Chẩn đoán<br><input id="f_cd" onkeyup="locCot()"></th>
 <th>Thuốc<br><input id="f_thuoc" onkeyup="locCot()"></th>
@@ -202,6 +400,19 @@ async function loadData() {
     hienThi(ds);
 }
 
+// Gợi ý giới tính cho dữ liệu cũ chưa có giới tính: nhà 1 và 2 là nữ, các nhà còn lại là nam
+function gioiTinh(nhaVal) {
+    let m = String(nhaVal || "").match(/\d+/);
+    if (!m) return "";
+    let n = parseInt(m[0], 10);
+    return (n === 1 || n === 2) ? "Nữ" : "Nam";
+}
+
+// GIỚI TÍNH CỦA 1 ĐỐI TƯỢNG: ưu tiên giá trị đã chọn; dữ liệu cũ chưa có thì tạm tính theo nhà
+function gtCua(p) {
+    return p.gioitinh || gioiTinh(p.nha);
+}
+
 // DATA
 function layData() {
     return {
@@ -209,6 +420,7 @@ function layData() {
         namsinh: namsinh.value,
         ngaynhap: ngaynhap.value,
         nha: nha.value,
+        gioitinh: gioitinh.value,
         chandoan: chandoan.value,
         thuoc: thuoc.value,
         bhyt: bhyt.value
@@ -250,7 +462,9 @@ window.sua = function (id) {
     chandoan.value = p.chandoan;
     thuoc.value = p.thuoc;
     bhyt.value = p.bhyt;
+    gioitinh.value = p.gioitinh || gioiTinh(p.nha);
     idSua = id;
+    window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 // UPDATE
@@ -298,6 +512,7 @@ window.locCot = function () {
 
         return matchTen &&
             xuLy(p.namsinh).includes(xuLy(f_namsinh.value)) &&
+            (f_gt.value === "" || gtCua(p) === f_gt.value) &&
             xuLy(doiNgay(p.ngaynhap)).includes(xuLy(f_ngaynhap.value)) &&
             (f_nha.value.trim() === "" || xuLy(p.nha) === xuLy(f_nha.value)) &&
             xuLy(p.chandoan).includes(xuLy(f_cd.value)) &&
@@ -410,11 +625,15 @@ function hienThi(data, giuThongKe) {
     let stt = 1;
 
     data.forEach(p => {
+        let gt = gtCua(p);
+        let gtHtml = gt ? `<span class="gt ${gt === "Nữ" ? "nu" : "nam"}">${gt}</span>` : "";
+
         html += `
         <tr>
             <td>${stt}</td>
             <td>${p.ten || ""}</td>
             <td>${p.namsinh || ""}</td>
+            <td>${gtHtml}</td>
             <td>${doiNgay(p.ngaynhap)}</td>
             <td>${p.nha || ""}</td>
             <td>${p.chandoan || ""}</td>
@@ -422,7 +641,7 @@ function hienThi(data, giuThongKe) {
             <td>${p.bhyt || ""}</td>
             <td>
                 <button onclick="sua('${p.id}')">Sửa</button>
-                <button onclick="xoa('${p.id}')">Xoá</button>
+                <button class="xoa" onclick="xoa('${p.id}')">Xoá</button>
             </td>
         </tr>`;
         stt++;
@@ -447,6 +666,7 @@ function clearForm() {
     chandoan.value = "";
     thuoc.value = "";
     bhyt.value = "";
+    gioitinh.value = "";
 }
 
 // ================= NHẬP EXCEL =================
@@ -476,9 +696,17 @@ function chuanNgay(v) {
     return "";
 }
 
+// Chuẩn hoá giới tính từ Excel
+function chuanGT(v) {
+    let k = xuLy(v);
+    if (k === "nu") return "Nữ";
+    if (k === "nam") return "Nam";
+    return "";
+}
+
 // Nhận diện cột theo tiêu đề
 function nhanDienCot(row) {
-    let map = { ten: -1, namsinh: -1, ngaynhap: -1, nha: -1, chandoan: -1, thuoc: -1, bhyt: -1 };
+    let map = { ten: -1, namsinh: -1, ngaynhap: -1, nha: -1, chandoan: -1, thuoc: -1, bhyt: -1, gioitinh: -1 };
     row.forEach((cell, j) => {
         let k = xuLy(cell).replace(/ /g, "");
         if (!k) return;
@@ -488,6 +716,7 @@ function nhanDienCot(row) {
         else if (k === "nha" || k === "phong") map.nha = j;
         else if (k.startsWith("chandoan") || k === "benh") map.chandoan = j;
         else if (k === "thuoc") map.thuoc = j;
+        else if (k === "gioitinh" || k === "gt") map.gioitinh = j;
         else if (k.includes("bhyt")) map.bhyt = j;
     });
     return map;
@@ -516,7 +745,7 @@ window.nhapExcel = async function (ev) {
         // Không có tiêu đề -> mặc định thứ tự cột:
         // Họ tên | Năm sinh | Ngày nhập | Nhà | Chẩn đoán | Thuốc | BHYT
         if (!map) {
-            map = { ten: 0, namsinh: 1, ngaynhap: 2, nha: 3, chandoan: 4, thuoc: 5, bhyt: 6 };
+            map = { ten: 0, namsinh: 1, ngaynhap: 2, nha: 3, chandoan: 4, thuoc: 5, bhyt: 6, gioitinh: 7 };
             batDau = 0;
         }
 
@@ -539,6 +768,7 @@ window.nhapExcel = async function (ev) {
                 namsinh: chuoi(lay(r, "namsinh")),
                 ngaynhap: chuanNgay(lay(r, "ngaynhap")),
                 nha: chuoi(lay(r, "nha")),
+                gioitinh: chuanGT(lay(r, "gioitinh")),
                 chandoan: chuoi(lay(r, "chandoan")),
                 thuoc: chuoi(lay(r, "thuoc")),
                 bhyt: chuoi(lay(r, "bhyt"))
@@ -586,22 +816,34 @@ window.nhapExcel = async function (ev) {
 // File Excel mẫu
 window.taiFileMau = function () {
     let rows = [
-        ["Họ tên", "Năm sinh", "Ngày nhập TT", "Nhà", "Chẩn đoán", "Thuốc", "BHYT"],
-        ["Nguyễn Văn A", "1960", "15/03/2020", "1", "HA, Tâm thần", "Amlodipin; Risperidon", "DN4123456789"],
-        ["Trần Thị B", "1975", "01/07/2021", "2", "Đái tháo đường", "Metformin", ""]
+        ["Họ tên", "Năm sinh", "Ngày nhập TT", "Nhà", "Chẩn đoán", "Thuốc", "BHYT", "Giới tính"],
+        ["Nguyễn Văn A", "1960", "15/03/2020", "1", "HA, Tâm thần", "Amlodipin; Risperidon", "DN4123456789", "Nam"],
+        ["Trần Thị B", "1975", "01/07/2021", "2", "Đái tháo đường", "Metformin", "", "Nữ"]
     ];
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.aoa_to_sheet(rows);
-    ws["!cols"] = [{wch:20},{wch:10},{wch:14},{wch:6},{wch:25},{wch:25},{wch:16}];
+    ws["!cols"] = [{wch:20},{wch:10},{wch:14},{wch:6},{wch:25},{wch:25},{wch:16},{wch:10}];
     XLSX.utils.book_append_sheet(wb, ws, "Mau nhap");
     XLSX.writeFile(wb, "mau_nhap_doi_tuong.xlsx");
 };
 
-// EXCEL
+// EXCEL (bỏ cột "Hành động", giữ nguyên danh sách đang hiển thị/lọc)
 window.xuatExcel = function () {
-    let table = document.querySelector("table");
+    let clone = document.querySelector("table").cloneNode(true);
+
+    // bỏ cột cuối (Hành động) ở mọi dòng
+    clone.querySelectorAll("tr").forEach(tr => {
+        if (tr.lastElementChild) tr.lastElementChild.remove();
+    });
+
+    // tiêu đề chỉ lấy chữ, bỏ ô lọc và ký hiệu ⬍
+    clone.querySelectorAll("th").forEach(th => {
+        let first = th.childNodes[0];
+        th.textContent = first ? first.textContent.replace("⬍", "").trim() : "";
+    });
+
     let wb = XLSX.utils.book_new();
-    let ws = XLSX.utils.table_to_sheet(table);
+    let ws = XLSX.utils.table_to_sheet(clone);
     XLSX.utils.book_append_sheet(wb, ws, "Danh sách");
     XLSX.writeFile(wb, "benhnhan.xlsx");
 };
@@ -610,9 +852,9 @@ window.xuatExcel = function () {
 window.xuatExcelBHYT = function () {
     let data = ds.filter(p => p.bhyt && p.bhyt.trim() !== "");
 
-    let rows = [["Họ tên","Năm sinh","Nhà","Chẩn đoán","Thuốc","BHYT"]];
+    let rows = [["Họ tên","Năm sinh","Giới tính","Nhà","Chẩn đoán","Thuốc","BHYT"]];
     data.forEach(p => {
-        rows.push([p.ten,p.namsinh,p.nha,p.chandoan,p.thuoc,p.bhyt]);
+        rows.push([p.ten,p.namsinh,gtCua(p),p.nha,p.chandoan,p.thuoc,p.bhyt]);
     });
 
     let wb = XLSX.utils.book_new();
