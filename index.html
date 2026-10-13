@@ -276,6 +276,36 @@ td button.xoa:hover{ background:#fbe3e3; border-color:var(--do); color:var(--do)
     .banner p{ display:none; }
     .the-dau .admin-box input{ width:120px; }
 }
+#toolBody{ margin-top:8px; }
+.cd-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; font-size:14px; }
+
+/* ===== ĐIỆN THOẠI: nhường chỗ cho danh sách ===== */
+@media (max-width:700px){
+    body{ padding:0 6px 16px; }
+    .banner{ margin:0 -6px 8px; padding:8px 12px; }
+    .the{ padding:8px 10px; margin-bottom:6px; border-radius:10px; }
+    .the-dau h3{ font-size:14px; }
+    .tong{ margin:6px 0; gap:6px; align-items:center; }
+    .chip{ padding:3px 9px; font-size:12px; border-radius:8px; }
+    .chip b{ font-size:15px; margin-left:4px; }
+    .container{ max-height:82vh; border-radius:8px; }
+    table{ min-width:700px; }
+    th, td{ font-size:12px; padding:2px 3px; }
+    th:nth-child(1), td:nth-child(1){ display:none; }
+    th:nth-child(2), td:nth-child(2){ width:105px; }
+    th:nth-child(3), td:nth-child(3){ width:50px; }
+    th:nth-child(4), td:nth-child(4){ width:58px; }
+    th:nth-child(5), td:nth-child(5){ width:80px; }
+    th:nth-child(6), td:nth-child(6){ width:44px; }
+    th:nth-child(9), td:nth-child(9){ width:95px; }
+    th:nth-child(10), td:nth-child(10){ width:76px; }
+    /* giữ cột Họ tên cố định khi vuốt ngang */
+    th:nth-child(2), td:nth-child(2){ position:sticky; left:0; z-index:2; }
+    th:nth-child(2){ z-index:3; }
+    td:nth-child(2){ background:#fff; white-space:normal; }
+    tbody tr:nth-child(even) td:nth-child(2){ background:#f8fbfa; }
+    .cd-grid{ grid-template-columns:repeat(2,1fr); font-size:13px; }
+}
 </style>
 </head>
 
@@ -313,7 +343,9 @@ td button.xoa:hover{ background:#fbe3e3; border-color:var(--do); color:var(--do)
     </div>
     </div>
 
-<div class="the">
+<div class="the" id="theTool">
+    <button id="btnTool" class="nut-nho" onclick="moTool()">▲ Thu gọn công cụ</button>
+    <div id="toolBody" class="form-body">
     <div class="thanh">
         <div class="nhom">
             <span class="nhom-ten">Lọc BHYT:</span>
@@ -337,17 +369,15 @@ td button.xoa:hover{ background:#fbe3e3; border-color:var(--do); color:var(--do)
             <button onclick="taiFileMau()">⬇ Tải file Excel mẫu</button>
         </div>
     </div>
+    </div>
 </div>
 
 <div class="tong">
     <div class="chip">Tổng <b id="tongBN">0</b></div>
     <div class="chip ok">Có BHYT <b id="coBHYT">0</b></div>
     <div class="chip no">Chưa có BHYT <b id="chuaBHYT">0</b></div>
+    <button class="nut-nho" onclick="moThongKe()">📊 Thống kê chẩn đoán</button>
 </div>
-
-<button onclick="moThongKe()">
-📊 Xem thống kê chẩn đoán
-</button>
 
 <div id="tongCD" style="
 display:none;
@@ -441,6 +471,13 @@ window.moForm = function (mo) {
     formBody.classList.toggle("dong", dong);
     dauForm.classList.toggle("gon", dong);
     btnToggle.textContent = dong ? "▼ Mở form" : "▲ Thu gọn";
+};
+
+// THU GỌN / MỞ THANH CÔNG CỤ (lọc BHYT, xuất, nhập Excel)
+window.moTool = function (mo) {
+    let dong = (mo === undefined) ? !toolBody.classList.contains("dong") : !mo;
+    toolBody.classList.toggle("dong", dong);
+    btnTool.textContent = dong ? "▼ Công cụ: lọc BHYT, xuất, nhập Excel" : "▲ Thu gọn công cụ";
 };
 
 // DATA
@@ -629,7 +666,7 @@ function thongKeChanDoan(data) {
         Người mắc từ 2 bệnh trở lên: <b>${nhieuBenh}</b>.
         Bấm vào ô bệnh để lọc danh sách.
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:14px;">
+    <div class="cd-grid">
     `;
 
     arr.forEach(b => {
@@ -896,7 +933,7 @@ window.xuatExcelBHYT = function () {
 };
 
 window.onload = function () {
-    if (window.innerWidth <= 700) moForm(false); // điện thoại: mặc định thu gọn
+    if (window.innerWidth <= 700) { moForm(false); moTool(false); } // điện thoại: mặc định thu gọn
     loadData();
 };
 </script>
