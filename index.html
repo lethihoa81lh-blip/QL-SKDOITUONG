@@ -67,11 +67,24 @@ body {
 .admin-box input{ width:160px; }
 
 .luoi{
-    display:grid;
-    grid-template-columns:repeat(6, 1fr);
-    gap:8px 12px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:8px 8px;
 }
-.s2{ grid-column: span 2; }
+.o{ flex:1 1 100px; min-width:0; }
+.o.w-ten{ flex:2 1 150px; }
+.o.w-nam{ flex:0 1 72px; }
+.o.w-nha{ flex:0 1 60px; }
+.o.w-gt{ flex:0 1 92px; }
+.o.w-ngay{ flex:1 1 128px; }
+.o.w-cd{ flex:2 1 150px; }
+.o.w-thuoc{ flex:1.5 1 130px; }
+.o.w-bhyt{ flex:1 1 120px; }
+.form-body.dong{ display:none; }
+.the-dau.gon{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.nut-nho{ padding:4px 10px; font-size:13px; }
+.the-dau .admin-box input{ width:140px; }
 .o label{
     display:block;
     font-size:12px;
@@ -105,7 +118,7 @@ input, select, button {
     display:flex;
     flex-wrap:wrap;
     gap:8px;
-    margin-top:10px;
+    margin-top:0;
 }
 
 /* ===== NÚT ===== */
@@ -205,13 +218,14 @@ tbody tr:nth-child(even){ background:#f8fbfa; }
 tbody tr:hover{ background:#eef6ff; }
 
 th:nth-child(1), td:nth-child(1){ width:36px; }
-th:nth-child(2), td:nth-child(2){ width:150px; text-align:left; }
+th:nth-child(2), td:nth-child(2){ width:150px; }
+td:nth-child(2){ text-align:left; }
 th:nth-child(3), td:nth-child(3){ width:70px; }
 th:nth-child(4), td:nth-child(4){ width:82px; }
 th:nth-child(5), td:nth-child(5){ width:95px; }
 th:nth-child(6), td:nth-child(6){ width:55px; }
-th:nth-child(7), td:nth-child(7){ text-align:left; white-space:normal; }
-th:nth-child(8), td:nth-child(8){ text-align:left; white-space:normal; }
+th:nth-child(7), td:nth-child(7){ white-space:normal; }
+th:nth-child(8), td:nth-child(8){ white-space:normal; }
 th:nth-child(9), td:nth-child(9){ width:115px; }
 th:nth-child(10), td:nth-child(10){ width:100px; }
 
@@ -253,8 +267,15 @@ td button.xoa:hover{ background:#fbe3e3; border-color:var(--do); color:var(--do)
 }
 .cd-box:hover{ background:#eef6ff; }
 
-@media (max-width:900px){ .luoi{ grid-template-columns:repeat(3,1fr); } }
-@media (max-width:600px){ .luoi{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:700px){
+    .o{ flex:1 1 44%; }
+    .o.w-ten, .o.w-cd, .o.w-thuoc{ flex:1 1 100%; }
+    .hang-nut{ flex:1 1 100%; }
+    .hang-nut button{ flex:1; }
+    .banner h2{ font-size:17px; }
+    .banner p{ display:none; }
+    .the-dau .admin-box input{ width:120px; }
+}
 </style>
 </head>
 
@@ -266,30 +287,31 @@ td button.xoa:hover{ background:#fbe3e3; border-color:var(--do); color:var(--do)
 </div>
 
 <div class="the">
-    <div class="the-dau">
+    <div class="the-dau" id="dauForm">
         <h3>Thêm / cập nhật đối tượng</h3>
+        <button id="btnToggle" class="nut-nho" onclick="moForm()">▲ Thu gọn</button>
         <div class="admin-box">
             <input type="password" id="adminPass" placeholder="Mật khẩu admin">
             <button onclick="loginAdmin()">Đăng nhập admin</button>
         </div>
     </div>
 
+    <div id="formBody" class="form-body">
     <div class="luoi">
-        <div class="o s2"><label for="ten">Họ tên</label><input id="ten" placeholder="Nguyễn Văn A"></div>
-        <div class="o"><label for="namsinh">Năm sinh</label><input id="namsinh" placeholder="1960"></div>
-        <div class="o"><label for="nha">Nhà</label><input id="nha" placeholder="1"></div>
-        <div class="o"><label for="gioitinh">Giới tính</label><select id="gioitinh"><option value="">-- Chọn --</option><option value="Nam">Nam</option><option value="Nữ">Nữ</option></select></div>
-        <div class="o"><label for="ngaynhap">Ngày nhập TT</label><input id="ngaynhap" type="date"></div>
-        <div class="o s2"><label for="chandoan">Chẩn đoán</label><input id="chandoan" placeholder="Nhiều bệnh: HA, Tâm thần"></div>
-        <div class="o s2"><label for="thuoc">Thuốc</label><input id="thuoc" placeholder="Tên thuốc"></div>
-        <div class="o s2"><label for="bhyt">Số thẻ BHYT</label><input id="bhyt" placeholder="DN4..."></div>
+        <div class="o w-ten"><label for="ten">Họ tên</label><input id="ten" placeholder="Nguyễn Văn A"></div>
+        <div class="o w-nam"><label for="namsinh">Năm sinh</label><input id="namsinh" placeholder="1960"></div>
+        <div class="o w-nha"><label for="nha">Nhà</label><input id="nha" placeholder="1"></div>
+        <div class="o w-gt"><label for="gioitinh">Giới tính</label><select id="gioitinh"><option value="">-- Chọn --</option><option value="Nam">Nam</option><option value="Nữ">Nữ</option></select></div>
+        <div class="o w-ngay"><label for="ngaynhap">Ngày nhập TT</label><input id="ngaynhap" type="date"></div>
+        <div class="o w-cd"><label for="chandoan">Chẩn đoán</label><input id="chandoan" placeholder="HA, Tâm thần"></div>
+        <div class="o w-thuoc"><label for="thuoc">Thuốc</label><input id="thuoc" placeholder="Tên thuốc"></div>
+        <div class="o w-bhyt"><label for="bhyt">Số thẻ BHYT</label><input id="bhyt" placeholder="DN4..."></div>
+        <div class="hang-nut">
+            <button id="btnAdd" class="nut-chinh" onclick="them()" disabled>＋ Thêm</button>
+            <button id="btnEdit" class="nut-sua" onclick="capNhat()" disabled>✎ Cập nhật</button>
+        </div>
     </div>
-
-    <div class="hang-nut">
-        <button id="btnAdd" class="nut-chinh" onclick="them()" disabled>＋ Thêm</button>
-        <button id="btnEdit" class="nut-sua" onclick="capNhat()" disabled>✎ Cập nhật</button>
     </div>
-</div>
 
 <div class="the">
     <div class="thanh">
@@ -413,6 +435,14 @@ function gtCua(p) {
     return p.gioitinh || gioiTinh(p.nha);
 }
 
+// THU GỌN / MỞ FORM THÊM
+window.moForm = function (mo) {
+    let dong = (mo === undefined) ? !formBody.classList.contains("dong") : !mo;
+    formBody.classList.toggle("dong", dong);
+    dauForm.classList.toggle("gon", dong);
+    btnToggle.textContent = dong ? "▼ Mở form" : "▲ Thu gọn";
+};
+
 // DATA
 function layData() {
     return {
@@ -464,6 +494,7 @@ window.sua = function (id) {
     bhyt.value = p.bhyt;
     gioitinh.value = p.gioitinh || gioiTinh(p.nha);
     idSua = id;
+    moForm(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
@@ -864,7 +895,10 @@ window.xuatExcelBHYT = function () {
     XLSX.writeFile(wb, "benhnhan_BHYT.xlsx");
 };
 
-window.onload = loadData;
+window.onload = function () {
+    if (window.innerWidth <= 700) moForm(false); // điện thoại: mặc định thu gọn
+    loadData();
+};
 </script>
 
 </body>
