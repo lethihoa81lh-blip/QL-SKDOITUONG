@@ -516,6 +516,8 @@ window.them = async function () {
 // DELETE
 window.xoa = async function (id) {
     if (!isAdmin) return alert("Không có quyền!");
+    let p = ds.find(x => x.id == id);
+    if (!confirm("Bạn có chắc muốn xoá " + (p ? p.ten : "đối tượng này") + "?\nThao tác này không thể hoàn tác.")) return;
     await deleteDoc(doc(db, "benhnhan", id));
     loadData();
 };
